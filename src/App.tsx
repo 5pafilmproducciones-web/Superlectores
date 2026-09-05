@@ -46,6 +46,7 @@ import { RiverGame } from './components/games/RiverGame';
 import { MolesGame } from './components/games/MolesGame';
 import { PianoGame } from './components/games/PianoGame';
 import { MascotCompanion, MascotMessage } from './components/MascotCompanion';
+import { ShareAppModal } from './components/ShareAppModal';
 
 export default function App() {
   // Local persistence states via custom hook
@@ -58,17 +59,24 @@ export default function App() {
   // Interactive Mascot Companion state
   const [mascotMessage, setMascotMessage] = useState<MascotMessage | null>(null);
 
+  // Share modal state
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
   // Ensure child starts with 0 gems when opening for the first time
   useEffect(() => {
-    const initializedKey = 'lecturakids_zero_gems_v4';
-    if (!localStorage.getItem(initializedKey)) {
-      setProfile((prev) => ({
-        ...prev,
-        gems: 0,
-        score: 0,
-        storiesCompletedCount: 0,
-      }));
-      localStorage.setItem(initializedKey, 'true');
+    try {
+      const initializedKey = 'lecturakids_zero_gems_v4';
+      if (typeof window !== 'undefined' && window.localStorage && !window.localStorage.getItem(initializedKey)) {
+        setProfile((prev) => ({
+          ...prev,
+          gems: 0,
+          score: 0,
+          storiesCompletedCount: 0,
+        }));
+        window.localStorage.setItem(initializedKey, 'true');
+      }
+    } catch (err) {
+      console.warn('Storage initial check bypassed:', err);
     }
   }, [setProfile]);
 
@@ -279,6 +287,7 @@ export default function App() {
           profile={profile}
           onResetSeedData={handleResetSeedData}
           onOpenReportModal={() => setIsReportModalOpen(true)}
+          onOpenShareModal={() => setIsShareModalOpen(true)}
           currentUser={currentUser}
           currentSupabaseProfile={currentSupabaseProfile}
           onOpenAuthModal={handleOpenAuthModal}
@@ -423,6 +432,12 @@ export default function App() {
         activeStoryTitle={activeStory?.title}
         activeStoryText={activeStory?.text}
         storyQuestions={activeStory?.questions?.map((q) => q.question)}
+      />
+
+      {/* Share Application Modal */}
+      <ShareAppModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
       />
     </div>
   );

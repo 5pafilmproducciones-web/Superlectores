@@ -309,12 +309,12 @@ export const MascotCompanion: React.FC<MascotCompanionProps> = ({
   };
 
   return (
-    <div id="mascot-companion-container" className="fixed bottom-4 right-4 z-40 flex flex-col items-end pointer-events-none max-w-sm sm:max-w-md">
+    <div id="mascot-companion-container" className="fixed bottom-3 right-2.5 sm:bottom-4 sm:right-4 z-40 flex flex-col items-end pointer-events-none max-w-[calc(100vw-20px)]">
       {/* Speech Bubble / Message & Q&A Card */}
       {isExpanded && (currentMessage || isQAMode) && (
         <div 
           id="mascot-speech-bubble"
-          className="pointer-events-auto mb-3 bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 border-2 border-indigo-200 shadow-2xl text-slate-800 relative animate-in fade-in slide-in-from-bottom-4 duration-300 w-[310px] sm:w-[360px]"
+          className="pointer-events-auto mb-2 sm:mb-3 bg-white/95 backdrop-blur-md rounded-2xl p-3.5 sm:p-5 border-2 border-indigo-200 shadow-2xl text-slate-800 relative animate-in fade-in slide-in-from-bottom-4 duration-300 w-[295px] sm:w-[360px] max-w-[calc(100vw-24px)]"
         >
           {/* Top Bar: Close & Mode Toggle */}
           <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
@@ -615,11 +615,11 @@ export const MascotCompanion: React.FC<MascotCompanionProps> = ({
           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400 to-indigo-500 opacity-70 blur-xs group-hover:opacity-95 transition-opacity"></div>
 
           {/* Character Badge Container */}
-          <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-gradient-to-b from-amber-100 to-sky-100 border-2 border-white shadow-lg flex items-center justify-center overflow-hidden">
+          <div className="relative w-13 h-13 sm:w-17 sm:h-17 rounded-full bg-gradient-to-b from-amber-100 to-sky-100 border-2 border-white shadow-lg flex items-center justify-center overflow-hidden">
             {/* Custom Animated Owl SVG */}
             <svg 
               viewBox="0 0 100 100" 
-              className={`w-14 h-14 transition-transform duration-300 ${isSpeaking ? 'scale-105' : ''}`}
+              className={`w-11 h-11 sm:w-14 sm:h-14 transition-transform duration-300 ${isSpeaking ? 'scale-105' : ''}`}
             >
               {/* Owl Body */}
               <ellipse cx="50" cy="58" rx="32" ry="34" fill="#D97706" />
