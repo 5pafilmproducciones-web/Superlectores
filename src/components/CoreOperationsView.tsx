@@ -546,14 +546,14 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
       </div>
 
       {/* Story Carousel pills to easily jump between books */}
-      <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-thin">
+      <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-thin w-full max-w-full">
         {filteredStories.map((story) => {
           const isCurrent = story.id === activeStory.id;
           return (
             <button
               key={story.id}
               onClick={() => handleSelectStory(story)}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all shrink-0 ${
+              className={`flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 isCurrent
                   ? 'bg-indigo-50 border-indigo-300 text-indigo-900 shadow-xs ring-1 ring-indigo-400'
                   : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
@@ -563,14 +563,14 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                 <img
                   src={story.coverImage}
                   alt={story.title}
-                  className="w-9 h-9 rounded-lg object-cover border border-slate-200 shadow-xs shrink-0"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-cover border border-slate-200 shadow-xs shrink-0"
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <span className="text-lg">{story.emoji}</span>
+                <span className="text-base sm:text-lg">{story.emoji}</span>
               )}
               <div className="text-left">
-                <span className="block font-bold leading-tight truncate max-w-[140px]">{story.title}</span>
+                <span className="block font-bold leading-tight truncate max-w-[120px] sm:max-w-[140px]">{story.title}</span>
                 <span className="text-[10px] text-slate-500 font-normal">Nivel {story.level} • {story.rewardGems} 💎</span>
               </div>
             </button>
@@ -579,26 +579,26 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
       </div>
 
       {/* MAIN READER WORKSPACE */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full max-w-full">
         {/* Left Column: Interactive Story & Speech Evaluation (7 cols) */}
         <div className="lg:col-span-7 space-y-5">
           {/* Story Reading Box */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             {/* Box Header & Audio Controls */}
-            <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-50 to-indigo-50/50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div className="p-3.5 sm:p-5 bg-gradient-to-r from-slate-50 to-indigo-50/50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-indigo-600" />
+                <BookOpen className="w-5 h-5 text-indigo-600 shrink-0" />
                 <span className="font-bold text-sm text-slate-900">Lectura en Alta Voz</span>
                 <span className="text-xs text-slate-500">({storyWords.length} palabras)</span>
               </div>
 
               {/* Action buttons */}
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                 {/* Text to Speech Button */}
                 <button
                   id="btn-tts-listen"
                   onClick={toggleTextToSpeech}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+                  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
                     isSpeaking
                       ? 'bg-amber-100 border-amber-300 text-amber-800 animate-pulse'
                       : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -613,20 +613,20 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                 <button
                   id="btn-mic-toggle"
                   onClick={toggleSpeechRecognition}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs ${
+                  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer ${
                     isListening
                       ? 'bg-rose-600 hover:bg-rose-500 text-white animate-pulse'
                       : 'bg-indigo-600 hover:bg-indigo-500 text-white'
                   }`}
                 >
                   {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-                  <span>{isListening ? 'Detener Micrófono' : 'Leer en Voz Alta'}</span>
+                  <span>{isListening ? 'Detener Mic' : 'Leer en Voz Alta'}</span>
                 </button>
               </div>
             </div>
 
             {/* Reading Accuracy Live Meter */}
-            <div className="px-5 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs">
+            <div className="px-3.5 sm:px-5 py-2.5 bg-slate-50 border-b border-slate-100 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-slate-600">Precisión de Reconocimiento:</span>
                 <span className="font-extrabold text-indigo-700 font-mono text-sm">{speechAccuracy}%</span>
@@ -636,7 +636,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                 <button
                   id="btn-simulate-speech"
                   onClick={simulateSpeechReading}
-                  className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 underline transition-colors"
+                  className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 underline transition-colors cursor-pointer"
                   title="Prueba inmediata de reconocimiento auditivo sin necesidad de micrófono físico"
                 >
                   ⚡ Simular Lectura Fluida
@@ -786,7 +786,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
               </div>
 
               {/* Dynamic Questions Status & Controls */}
-              <div className="flex items-center justify-between text-xs bg-slate-50 p-2 rounded-xl border border-slate-200/70">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
                 <div className="flex items-center gap-1.5 text-slate-600">
                   <span className="font-medium text-[11px]">Banco de comprensión:</span>
                   <span className="px-2 py-0.5 rounded-full bg-white font-extrabold text-indigo-700 text-[11px] border border-slate-200">
@@ -794,13 +794,13 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <button
                     id="btn-rotate-questions"
                     type="button"
                     onClick={handleRotateQuestions}
                     title="Cargar otra combinación de preguntas para este cuento"
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-indigo-600 text-[11px] font-semibold transition-all shadow-2xs"
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-indigo-600 text-[11px] font-semibold transition-all shadow-2xs cursor-pointer"
                   >
                     <RefreshCw className="w-3 h-3 text-indigo-500" />
                     <span>Cambiar preguntas</span>
@@ -812,7 +812,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                       type="button"
                       onClick={handleResetStoryMastery}
                       title="Reiniciar banco de preguntas de este cuento"
-                      className="text-[11px] text-slate-400 hover:text-rose-600 underline font-medium"
+                      className="text-[11px] text-slate-400 hover:text-rose-600 underline font-medium cursor-pointer"
                     >
                       Reiniciar ciclo
                     </button>

@@ -155,22 +155,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Welcome Hero Banner with .story-card-gradient */}
           <div 
             id="welcome-banner"
-            className="story-card-gradient rounded-3xl p-6 sm:p-8 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center relative overflow-hidden shadow-lg gap-6"
+            className="story-card-gradient rounded-3xl p-5 sm:p-8 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center relative overflow-hidden shadow-lg gap-6 w-full max-w-full"
           >
             <div className="relative z-10 max-w-sm">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur-xs mb-2">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>Nivel {profile.level} • {profile.name}</span>
               </div>
-              <h2 className="text-3xl font-bold tracking-tight">¡Hola {profile.name}! 👋</h2>
-              <p className="mt-2 text-indigo-100 text-sm leading-relaxed opacity-95">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">¡Hola {profile.name}! 👋</h2>
+              <p className="mt-2 text-indigo-100 text-xs sm:text-sm leading-relaxed opacity-95">
                 Tienes una nueva misión de lectura: &ldquo;{recommendedStory.title}&rdquo;. ¡Léelo en voz alta para ganar {recommendedStory.rewardGems} gemas!
               </p>
-              <div className="flex flex-wrap items-center gap-3 mt-6">
+              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mt-5 sm:mt-6 w-full">
                 <button
                   id="btn-quick-start-reading"
                   onClick={() => onStartReading(recommendedStory.id)}
-                  className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 hover:bg-slate-50 transition-all text-sm transform hover:-translate-y-0.5 active:translate-y-0"
+                  className="bg-white text-indigo-600 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:bg-slate-50 transition-all text-xs sm:text-sm transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex-1 sm:flex-none"
                 >
                   <span>Empezar Lectura</span>
                   <ArrowRight className="w-4 h-4" />
@@ -189,7 +189,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       autoSpeak: true,
                     });
                   }}
-                  className="px-4 py-3 bg-amber-400 hover:bg-amber-300 text-amber-950 font-bold rounded-xl text-sm transition-all flex items-center gap-2 shadow-md transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                  className="px-3.5 py-2.5 sm:px-4 sm:py-3 bg-amber-400 hover:bg-amber-300 text-amber-950 font-bold rounded-xl text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-md transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                   title="Escuchar el saludo motivador de Leo el Búho"
                 >
                   <span className="text-base">🦉</span>
@@ -198,7 +198,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <button
                   id="btn-quick-open-games"
                   onClick={onOpenGames}
-                  className="px-4 py-3 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-xl text-sm transition-all flex items-center gap-2"
+                  className="px-3.5 py-2.5 sm:px-4 sm:py-3 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-xl text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Gamepad2 className="w-4 h-4 text-amber-300" />
                   <span>Zona de Juegos</span>
@@ -207,7 +207,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Recommended Story Cover Illustration Visual */}
-            <div className="w-40 h-36 sm:w-52 sm:h-44 rounded-2xl overflow-hidden relative shrink-0 mx-auto sm:mx-0 shadow-lg border-2 border-white/30 group bg-white/10">
+            <div className="w-full sm:w-52 h-44 rounded-2xl overflow-hidden relative shrink-0 shadow-lg border-2 border-white/30 group bg-white/10">
               {recommendedStory.coverImage ? (
                 <img
                   src={recommendedStory.coverImage}
@@ -235,10 +235,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* Level Filter Tabs */}
-              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl overflow-x-auto max-w-full">
                 <button
                   onClick={() => setDashboardLevelFilter('all')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                     dashboardLevelFilter === 'all'
                       ? 'bg-white text-indigo-700 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
@@ -250,7 +250,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <button
                     key={lvl}
                     onClick={() => setDashboardLevelFilter(lvl)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                       dashboardLevelFilter === lvl
                         ? 'bg-white text-indigo-700 shadow-xs'
                         : 'text-slate-600 hover:text-slate-900'

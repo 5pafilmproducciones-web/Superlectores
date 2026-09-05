@@ -259,7 +259,7 @@ export default function App() {
   }
 
   return (
-    <div id="app-root" className="min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-indigo-500 selection:text-white">
+    <div id="app-root" className="min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-indigo-500 selection:text-white w-full max-w-full overflow-x-hidden">
       {/* Sidebar Navigation */}
       <Sidebar
         currentTab={currentTab}
@@ -271,7 +271,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 w-full overflow-x-hidden">
         {/* Top Header */}
         <Navbar
           currentTab={currentTab}
@@ -285,7 +285,7 @@ export default function App() {
         />
 
         {/* Viewport Content */}
-        <main id="main-content-viewport" className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-7xl w-full mx-auto">
+        <main id="main-content-viewport" className="flex-1 px-3 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-7xl w-full mx-auto min-w-0 overflow-x-hidden">
           {currentTab === 'dashboard' && (
             <DashboardView
               records={records}
