@@ -147,10 +147,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="btn-open-landing"
               onClick={() => onSelectTab('landing')}
-              className="p-2 sm:px-3 sm:py-2 rounded-xl text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200 transition-colors text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-              title="Ver Landing Page de presentación"
+              className="p-2 sm:px-3 sm:py-2 rounded-xl text-amber-700 bg-amber-50/90 hover:bg-amber-100 border border-amber-200 transition-colors text-xs font-extrabold flex items-center gap-1.5 cursor-pointer shadow-xs"
+              title="Ver Landing Page de presentación de LecturaKids"
             >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span className="hidden sm:inline">Landing Page</span>
             </button>
 

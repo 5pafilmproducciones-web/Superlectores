@@ -53,7 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { 
       id: 'landing', 
       label: 'Landing Page', 
-      icon: <Sparkles className="w-5 h-5 text-indigo-500" /> 
+      icon: <Sparkles className="w-5 h-5 text-amber-500" /> 
     },
   ];
 

@@ -53,7 +53,7 @@ export default function App() {
   const [profile, setProfile] = useLocalStorage<ChildProfile>('lecturakids_profile', INITIAL_CHILD_PROFILE);
   const [stories, setStories] = useLocalStorage<Story[]>('lecturakids_stories', INITIAL_STORIES);
   const [evaluations, setEvaluations] = useLocalStorage<ReadingEvaluation[]>('lecturakids_evaluations', INITIAL_EVALUATIONS);
-  const [currentTab, setCurrentTab] = useLocalStorage<TabType>('lecturakids_current_tab', 'dashboard');
+  const [currentTab, setCurrentTab] = useLocalStorage<TabType>('lecturakids_current_tab', 'landing');
 
   // Interactive Mascot Companion state
   const [mascotMessage, setMascotMessage] = useState<MascotMessage | null>(null);
