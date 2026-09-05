@@ -116,3 +116,64 @@ export interface SupabaseProfile {
   created_at?: string;
   updated_at?: string;
 }
+
+// ----------------------------------------------------
+// MODELO DE INVENTARIO Y TRAZABILIDAD (SUPABASE)
+// ----------------------------------------------------
+export interface Category {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string | null;
+  color?: string;
+  created_at?: string;
+}
+
+export interface Product {
+  id: string;
+  user_id: string;
+  sku?: string | null;
+  name: string;
+  description?: string | null;
+  category_id?: string | null;
+  category?: Category | null;
+  unit: string;
+  current_stock: number;
+  min_stock: number;
+  unit_price: number;
+  location?: string | null;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export type MovementType = 'entrada' | 'salida' | 'ajuste';
+
+export interface InventoryMovement {
+  id: string;
+  user_id: string;
+  product_id: string;
+  product?: {
+    name: string;
+    sku?: string | null;
+    unit: string;
+  } | null;
+  movement_type: MovementType;
+  quantity: number;
+  previous_stock: number;
+  new_stock: number;
+  reason: string;
+  reference_code?: string | null;
+  unit_cost?: number;
+  created_at: string;
+}
+
+export interface MovementInput {
+  productId: string;
+  movementType: MovementType;
+  quantity: number;
+  reason: string;
+  referenceCode?: string;
+  unitCost?: number;
+}
+
