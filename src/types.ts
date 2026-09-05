@@ -11,7 +11,7 @@ export interface CoreRecord {
   authorOrTarget?: string;
 }
 
-export type TabType = 'dashboard' | 'operations' | 'records' | 'settings' | 'auth';
+export type TabType = 'landing' | 'dashboard' | 'operations' | 'records' | 'settings' | 'auth';
 
 export interface ToastMessage {
   id: string;

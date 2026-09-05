@@ -31,6 +31,7 @@ import { RecordModal } from './components/RecordModal';
 import { ReportExportModal } from './components/ReportExportModal';
 import { AuthModal } from './components/AuthModal';
 import { AuthScreen } from './components/auth';
+import { LandingPage } from './components/LandingPage';
 import { AuthMode, SupabaseProfile, SupabaseUser } from './types';
 import { getCurrentSession, fetchUserProfile } from './lib/authService';
 import { RaceGame } from './components/games/RaceGame';
@@ -239,6 +240,23 @@ export default function App() {
     }
     setCurrentTab('operations');
   };
+
+  // Render standalone dark-mode public SaaS landing page
+  if (currentTab === 'landing') {
+    return (
+      <div id="landing-container" className="min-h-screen bg-slate-950">
+        <LandingPage
+          onNavigateToAuth={(mode) => {
+            setAuthModalMode(mode);
+            setCurrentTab('auth');
+          }}
+          onEnterApp={() => setCurrentTab('dashboard')}
+          isAuthenticated={Boolean(currentUser)}
+        />
+        <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      </div>
+    );
+  }
 
   return (
     <div id="app-root" className="min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-indigo-500 selection:text-white">

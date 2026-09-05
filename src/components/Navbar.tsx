@@ -11,7 +11,8 @@ import {
   Award,
   LogIn,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  Sparkles
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -141,8 +142,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Action buttons: PDF Report & Reset Seed */}
+          {/* Action buttons: Landing Page, PDF Report & Reset Seed */}
           <div className="flex items-center gap-1.5 sm:gap-2 pl-2 sm:pl-4 border-l border-slate-200">
+            <button
+              id="btn-open-landing"
+              onClick={() => onSelectTab('landing')}
+              className="p-2 sm:px-3 sm:py-2 rounded-xl text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200 transition-colors text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+              title="Ver Landing Page de presentación"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="hidden sm:inline">Landing Page</span>
+            </button>
+
             <button
               id="btn-open-report"
               onClick={onOpenReportModal}

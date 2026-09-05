@@ -8,7 +8,8 @@ import {
   FolderKanban,
   ShieldCheck,
   LogIn,
-  UserCheck
+  UserCheck,
+  Sparkles
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -48,6 +49,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'records', 
       label: 'Progreso', 
       icon: <BarChart3 className="w-5 h-5" /> 
+    },
+    { 
+      id: 'landing', 
+      label: 'Landing Page', 
+      icon: <Sparkles className="w-5 h-5 text-indigo-500" /> 
     },
   ];
 
