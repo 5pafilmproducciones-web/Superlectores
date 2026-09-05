@@ -1,0 +1,6 @@
+{
+  "name": "LecturaKids - Comprensión y Gemas",
+  "description": "Aplicación interactiva de lectura en voz alta con reconocimiento de voz, comprensión lectora, evaluación por niveles y recompensas con mini-juegos para niños.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
