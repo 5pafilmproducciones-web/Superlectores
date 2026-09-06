@@ -158,6 +158,21 @@ export default function App() {
     const client = getSupabase();
     if (client) {
       const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
+        // Handle password recovery event
+        if (event === 'PASSWORD_RECOVERY') {
+          if (session?.user) {
+            setCurrentUser(session.user as SupabaseUser);
+          }
+          setAuthModalMode('update-password');
+          setIsAuthModalOpen(true);
+          showToast(
+            'info',
+            'Restablecer Contraseña',
+            'Escribe tu nueva contraseña para actualizar el acceso a tu cuenta.'
+          );
+          return;
+        }
+
         if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && session?.user) {
           const authedUser = session.user as SupabaseUser;
           setCurrentUser(authedUser);
@@ -175,6 +190,18 @@ export default function App() {
             }
           } catch {
             // ignore
+          }
+
+          // Check if this was a password recovery URL
+          if (typeof window !== 'undefined' && window.location.hash.includes('type=recovery')) {
+            setAuthModalMode('update-password');
+            setIsAuthModalOpen(true);
+            showToast(
+              'info',
+              'Restablecer Contraseña',
+              'Escribe tu nueva contraseña para actualizar el acceso a tu cuenta.'
+            );
+            return;
           }
 
           // Check if this was an email verification redirect (hash with access_token or query code)
