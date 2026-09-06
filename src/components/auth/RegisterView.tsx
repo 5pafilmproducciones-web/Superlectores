@@ -111,7 +111,7 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
           showToast?.(
             'success',
             '¡Cuenta creada con éxito!',
-            `¡Bienvenido a LecturaKids, ${childName}!`
+            `¡Bienvenido a Super Lectores, ${childName}!`
           );
           onSuccess?.(data.user);
         }
@@ -163,11 +163,14 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
     <div id="register-component-view" className="w-full max-w-md mx-auto">
       {/* Header */}
       <div className="text-center mb-5">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold mb-2">
+          <span>Suscripción al Plan Gratuito</span>
+        </div>
         <h3 className="text-2xl font-black text-slate-900 tracking-tight">
           Crea tu cuenta de explorador
         </h3>
         <p className="text-xs text-slate-500 mt-1 font-medium">
-          Registra al pequeño lector y a su tutor para guardar estrellas, gemas y progreso.
+          Registra al pequeño lector para tener su puntuación real y guardar todas sus gemas.
         </p>
       </div>
 

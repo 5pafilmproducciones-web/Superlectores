@@ -45,15 +45,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
           
           {/* Brand Logo */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-violet-600 to-indigo-600 p-0.5 shadow-lg shadow-indigo-500/20 flex items-center justify-center shrink-0">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-              </div>
-            </div>
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            <img
+              src="/logo_superlectores.png"
+              alt="Super Lectores"
+              className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover shadow-md border border-amber-400/50"
+            />
             <div>
               <span className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-1 sm:gap-1.5">
-                Lectura<span className="text-amber-400">Kids</span>
+                Super<span className="text-amber-400">Lectores</span>
                 <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-full font-extrabold uppercase tracking-wider bg-amber-400/10 text-amber-400 border border-amber-400/25 hidden xs:flex items-center gap-0.5">
                   <Gem className="w-2 h-2 sm:w-2.5 sm:h-2.5" /> EdTech
                 </span>
@@ -542,11 +542,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             
             {/* Columna 1: Brand */}
             <div className="sm:col-span-2 md:col-span-1 space-y-2 sm:space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-bold shrink-0">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-                <span className="text-sm font-bold text-white tracking-tight">LecturaKids</span>
+              <div className="flex items-center gap-2.5">
+                <img
+                  src="/logo_superlectores.png"
+                  alt="Super Lectores"
+                  className="w-8 h-8 rounded-full object-cover border border-amber-400/50 shadow-xs"
+                />
+                <span className="text-sm font-bold text-white tracking-tight">Super Lectores</span>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Plataforma EdTech interactiva para el fomento de la comprensión lectora, lectura en voz alta y gamificación positiva para niños.
@@ -595,7 +597,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           <div className="pt-6 sm:pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] text-slate-400 text-center sm:text-left">
-            <p>© 2026 LecturaKids. Todos los derechos reservados.</p>
+            <p>© 2026 Super Lectores. Todos los derechos reservados.</p>
             <div className="flex items-center gap-3">
               <span>Diseñado para familias lectoras</span>
               <span>•</span>

@@ -59,11 +59,13 @@ export const ShareAppModal: React.FC<ShareAppModalProps> = ({ isOpen, onClose })
         {/* Header */}
         <div className="p-4 sm:p-5 bg-gradient-to-r from-indigo-500 to-indigo-700 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-              <Share2 className="w-5 h-5 text-amber-300" />
-            </div>
+            <img
+              src="/logo_superlectores.png"
+              alt="Super Lectores"
+              className="w-10 h-10 rounded-full object-cover border border-amber-400/50 shadow-xs"
+            />
             <div>
-              <h3 className="font-extrabold text-base sm:text-lg leading-tight">Compartir LecturaKids</h3>
+              <h3 className="font-extrabold text-base sm:text-lg leading-tight">Compartir Super Lectores</h3>
               <p className="text-xs text-indigo-100">Guía para que tus amigos o alumnos abran la app</p>
             </div>
           </div>

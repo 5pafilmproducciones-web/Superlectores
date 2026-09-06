@@ -1,5 +1,5 @@
 /**
- * Mascot AI Service for LecturaKids
+ * Mascot AI Service for Super Lectores
  * Connects to server-side Gemini API (/api/mascot/ask) with robust client fallback
  * Strictly enforces anti-cheating guidelines ("sin hacer trampa en los cuentos")
  */

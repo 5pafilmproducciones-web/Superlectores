@@ -79,11 +79,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-1.5 sm:gap-2 cursor-pointer group"
             title="Ir a página de inicio"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-tr from-amber-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-xs sm:text-sm shadow-xs group-hover:scale-105 transition-transform">
-              LK
-            </div>
+            <img
+              src="/logo_superlectores.png"
+              alt="Super Lectores"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover shadow-xs border border-amber-400/50 group-hover:scale-105 transition-transform"
+            />
             <span className="font-extrabold text-sm sm:text-base text-slate-900 tracking-tight">
-              Lectura<span className="text-amber-500">Kids</span>
+              Super<span className="text-amber-500">Lectores</span>
             </span>
           </div>
 

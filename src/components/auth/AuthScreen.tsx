@@ -88,20 +88,22 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         {/* Brand Banner */}
         <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 p-6 sm:p-8 text-white relative">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20 shadow-inner">
-              <BookOpen className="w-6 h-6 text-indigo-200" />
-            </div>
+            <img
+              src="/logo_superlectores.png"
+              alt="Super Lectores"
+              className="w-13 h-13 rounded-full object-cover border-2 border-amber-400/50 shadow-md"
+            />
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl sm:text-2xl font-black tracking-tight">
-                  LecturaKids
+                  Super Lectores
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-black uppercase tracking-wider text-indigo-100">
-                  Supabase Auth
+                  Plan Gratuito
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-indigo-100 mt-0.5 font-medium">
-                Portal de Acceso para Estudiantes y Padres
+                Portal de Acceso para Estudiantes y Familias
               </p>
             </div>
           </div>

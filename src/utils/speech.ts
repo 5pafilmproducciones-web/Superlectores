@@ -1,5 +1,5 @@
 /**
- * Speech synthesis utility for LecturaKids mascot and voice motivation
+ * Speech synthesis utility for Super Lectores mascot and voice motivation
  */
 
 let currentUtterance: SpeechSynthesisUtterance | null = null;

@@ -81,10 +81,15 @@ export const ReportExportModal: React.FC<ReportExportModalProps> = ({
             {/* Header Document */}
             <div className="flex items-start justify-between border-b border-slate-200 pb-5">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-xl text-indigo-700 tracking-tight">LecturaKids</span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    Certificado Pre-MVP
+                <div className="flex items-center gap-2.5">
+                  <img
+                    src="/logo_superlectores.png"
+                    alt="Super Lectores"
+                    className="w-8 h-8 rounded-full object-cover border border-amber-400/50"
+                  />
+                  <span className="font-black text-xl text-indigo-700 tracking-tight">Super Lectores</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                    Certificado Oficial
                   </span>
                 </div>
                 <h4 className="text-base font-bold text-slate-800 mt-1">Evaluación de Fluidez y Comprensión</h4>

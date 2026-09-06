@@ -47,14 +47,18 @@ import { MolesGame } from './components/games/MolesGame';
 import { PianoGame } from './components/games/PianoGame';
 import { MascotCompanion, MascotMessage } from './components/MascotCompanion';
 import { ShareAppModal } from './components/ShareAppModal';
+import { Preloader } from './components/Preloader';
 
 export default function App() {
+  // Application initial preloader state
+  const [isLoadingApp, setIsLoadingApp] = useState(true);
+
   // Local persistence states via custom hook
-  const [records, setRecords] = useLocalStorage<CoreRecord[]>('lecturakids_records', INITIAL_RECORDS);
-  const [profile, setProfile] = useLocalStorage<ChildProfile>('lecturakids_profile', INITIAL_CHILD_PROFILE);
-  const [stories, setStories] = useLocalStorage<Story[]>('lecturakids_stories', INITIAL_STORIES);
-  const [evaluations, setEvaluations] = useLocalStorage<ReadingEvaluation[]>('lecturakids_evaluations', INITIAL_EVALUATIONS);
-  const [currentTab, setCurrentTab] = useLocalStorage<TabType>('lecturakids_current_tab', 'landing');
+  const [records, setRecords] = useLocalStorage<CoreRecord[]>('superlectores_records', INITIAL_RECORDS);
+  const [profile, setProfile] = useLocalStorage<ChildProfile>('superlectores_profile', INITIAL_CHILD_PROFILE);
+  const [stories, setStories] = useLocalStorage<Story[]>('superlectores_stories', INITIAL_STORIES);
+  const [evaluations, setEvaluations] = useLocalStorage<ReadingEvaluation[]>('superlectores_evaluations', INITIAL_EVALUATIONS);
+  const [currentTab, setCurrentTab] = useLocalStorage<TabType>('superlectores_current_tab', 'landing');
 
   // Interactive Mascot Companion state
   const [mascotMessage, setMascotMessage] = useState<MascotMessage | null>(null);
@@ -129,9 +133,31 @@ export default function App() {
         if (prof?.child_name) {
           setProfile((prev) => ({ ...prev, name: prof.child_name! }));
         }
+        // Load user-specific scores and gems
+        try {
+          const userKey = `superlectores_profile_${user.id}`;
+          const savedData = localStorage.getItem(userKey);
+          if (savedData) {
+            const parsed = JSON.parse(savedData);
+            setProfile((prev) => ({ ...prev, ...parsed }));
+          }
+        } catch {
+          // ignore
+        }
       }
     });
   }, [setProfile]);
+
+  // Sync profile data to user's personal storage when logged in
+  useEffect(() => {
+    if (currentUser?.id) {
+      try {
+        localStorage.setItem(`superlectores_profile_${currentUser.id}`, JSON.stringify(profile));
+      } catch {
+        // ignore
+      }
+    }
+  }, [profile, currentUser]);
 
   const handleOpenAuthModal = (mode: AuthMode = 'login') => {
     setAuthModalMode(mode);
@@ -141,8 +167,61 @@ export default function App() {
   const handleAuthChange = (user: SupabaseUser | null, profileData: SupabaseProfile | null) => {
     setCurrentUser(user);
     setCurrentSupabaseProfile(profileData);
-    if (profileData?.child_name) {
-      setProfile((prev) => ({ ...prev, name: profileData.child_name! }));
+    if (user) {
+      if (profileData?.child_name) {
+        setProfile((prev) => ({ ...prev, name: profileData.child_name! }));
+      }
+      try {
+        const userKey = `superlectores_profile_${user.id}`;
+        const savedData = localStorage.getItem(userKey);
+        if (savedData) {
+          const parsed = JSON.parse(savedData);
+          setProfile((prev) => ({ ...prev, ...parsed }));
+        }
+      } catch {
+        // ignore
+      }
+      setCurrentTab('dashboard');
+      showToast(
+        'success',
+        '¡Suscripción al Plan Gratuito Activa!',
+        `¡Bienvenido ${profileData?.child_name || profile.name}! Tu puntuación real y gemas se guardan en tu cuenta.`
+      );
+    } else {
+      setCurrentTab('landing');
+    }
+  };
+
+  // Enforce mandatory free subscription/registration before entering inner platform
+  const handleSelectTab = (tab: TabType) => {
+    if (tab === 'landing') {
+      setCurrentTab('landing');
+      return;
+    }
+    if (!currentUser && tab !== 'auth') {
+      setAuthModalMode('register');
+      setCurrentTab('auth');
+      showToast(
+        'info',
+        'Suscripción al Plan Gratuito Requerida',
+        'Para acceder a la plataforma y guardar tu puntuación real y gemas, suscríbete gratis con tu cuenta.'
+      );
+      return;
+    }
+    setCurrentTab(tab);
+  };
+
+  const handleEnterApp = () => {
+    if (!currentUser) {
+      setAuthModalMode('register');
+      setCurrentTab('auth');
+      showToast(
+        'info',
+        'Suscripción al Plan Gratuito Requerida',
+        'Para comenzar a usar la plataforma, crea tu cuenta gratuita de explorador.'
+      );
+    } else {
+      setCurrentTab('dashboard');
     }
   };
 
@@ -253,12 +332,15 @@ export default function App() {
   if (currentTab === 'landing') {
     return (
       <div id="landing-container" className="min-h-screen bg-slate-950">
+        {isLoadingApp && (
+          <Preloader onFinish={() => setIsLoadingApp(false)} minDuration={1200} />
+        )}
         <LandingPage
           onNavigateToAuth={(mode) => {
             setAuthModalMode(mode);
             setCurrentTab('auth');
           }}
-          onEnterApp={() => setCurrentTab('dashboard')}
+          onEnterApp={handleEnterApp}
           isAuthenticated={Boolean(currentUser)}
         />
         <ToastContainer toasts={toasts} onDismiss={dismissToast} />
@@ -268,10 +350,13 @@ export default function App() {
 
   return (
     <div id="app-root" className="min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-indigo-500 selection:text-white w-full max-w-full overflow-x-hidden">
+      {isLoadingApp && (
+        <Preloader onFinish={() => setIsLoadingApp(false)} minDuration={1200} />
+      )}
       {/* Sidebar Navigation */}
       <Sidebar
         currentTab={currentTab}
-        onSelectTab={setCurrentTab}
+        onSelectTab={handleSelectTab}
         profile={profile}
         currentUser={currentUser}
         currentSupabaseProfile={currentSupabaseProfile}
@@ -283,7 +368,7 @@ export default function App() {
         {/* Top Header */}
         <Navbar
           currentTab={currentTab}
-          onSelectTab={setCurrentTab}
+          onSelectTab={handleSelectTab}
           profile={profile}
           onResetSeedData={handleResetSeedData}
           onOpenReportModal={() => setIsReportModalOpen(true)}
@@ -348,7 +433,7 @@ export default function App() {
               currentUser={currentUser}
               currentProfile={currentSupabaseProfile}
               onAuthChange={handleAuthChange}
-              onBackToApp={() => setCurrentTab('operations')}
+              onBackToApp={() => setCurrentTab(currentUser ? 'dashboard' : 'landing')}
               showToast={showToast}
               initialMode={authModalMode}
             />

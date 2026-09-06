@@ -69,16 +69,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col shrink-0 sticky top-0 h-screen select-none"
     >
       {/* Brand Header */}
-      <div className="p-6 flex items-center gap-3 border-b border-slate-100">
-        <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-xs">
-          SL
-        </div>
+      <div className="p-5 flex items-center gap-3 border-b border-slate-100">
+        <img
+          src="/logo_superlectores.png"
+          alt="Super Lectores"
+          className="w-11 h-11 rounded-full object-cover shadow-sm border border-amber-400/50"
+        />
         <div>
-          <span className="font-bold text-lg tracking-tight text-slate-900 block leading-tight">
-            SuperLectores
+          <span className="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">
+            Super <span className="text-amber-500">Lectores</span>
           </span>
           <span className="text-[11px] text-slate-400 font-medium">
-            LecturaKids • Pre-MVP
+            Plataforma Infantil
           </span>
         </div>
       </div>
