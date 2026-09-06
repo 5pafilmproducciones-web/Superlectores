@@ -67,82 +67,90 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div id="dashboard-view" className="space-y-6 max-w-7xl mx-auto pb-12">
-      {/* 4 KPI Cards Header */}
-      <div id="kpi-cards-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 4 KPI Cards Header: 2x2 grid on mobile, 4 columns on desktop */}
+      <div id="kpi-cards-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* KPI 1: Gemas Totales */}
         <div 
           id="kpi-card-gems"
-          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all"
+          className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Gemas Acumuladas</span>
-            <div className="p-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-100">
-              <Gem className="w-5 h-5 fill-amber-300" />
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">Gemas</span>
+            <div className="p-1.5 sm:p-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 shrink-0">
+              <Gem className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-300" />
             </div>
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900">{totalGems}</span>
-            <span className="text-xs font-semibold text-emerald-600 flex items-center">
-              <TrendingUp className="w-3.5 h-3.5 mr-0.5" /> +{evaluations.length * 10} ganadas
-            </span>
+          <div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl sm:text-3xl font-extrabold text-slate-900">{totalGems}</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-emerald-600 flex items-center truncate">
+                <TrendingUp className="w-3 h-3 mr-0.5 shrink-0" /> +{evaluations.length * 10}
+              </span>
+            </div>
+            <p className="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-1">Canjeables por juegos</p>
           </div>
-          <p className="text-xs text-slate-400 mt-2">Canjeables por recesos con mini-juegos</p>
         </div>
 
         {/* KPI 2: Cuentos Completados */}
         <div 
           id="kpi-card-stories"
-          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all"
+          className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Cuentos Leídos</span>
-            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100">
-              <BookCheck className="w-5 h-5" />
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">Cuentos</span>
+            <div className="p-1.5 sm:p-2 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 shrink-0">
+              <BookCheck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900">{completedRecordsCount}</span>
-            <span className="text-xs font-semibold text-slate-500">de {totalRecords} registrados</span>
+          <div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl sm:text-3xl font-extrabold text-slate-900">{completedRecordsCount}</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-slate-500">de {totalRecords}</span>
+            </div>
+            <p className="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-1">{completedPct}% completado</p>
           </div>
-          <p className="text-xs text-slate-400 mt-2">{completedPct}% completado del directorio</p>
         </div>
 
         {/* KPI 3: Nivel Actual */}
         <div 
           id="kpi-card-level"
-          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all"
+          className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Nivel Actual</span>
-            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100">
-              <Award className="w-5 h-5 fill-indigo-100" />
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">Nivel</span>
+            <div className="p-1.5 sm:p-2 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 shrink-0">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5 fill-indigo-100" />
             </div>
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900">Nivel {profile.level}</span>
-            <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
-              {profile.level === 1 ? '7 años' : profile.level === 2 ? '8-9 años' : '10 años'}
-            </span>
+          <div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl sm:text-3xl font-extrabold text-slate-900">Lvl {profile.level}</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded-md">
+                {profile.level === 1 ? '7a' : profile.level === 2 ? '8-9a' : '10a'}
+              </span>
+            </div>
+            <p className="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-1">{profile.score} XP total</p>
           </div>
-          <p className="text-xs text-slate-400 mt-2">{profile.score} XP acumulados</p>
         </div>
 
         {/* KPI 4: Fluidez Auditiva */}
         <div 
           id="kpi-card-accuracy"
-          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all"
+          className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Fluidez en Voz Alta</span>
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
-              <Mic className="w-5 h-5" />
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">Voz Alta</span>
+            <div className="p-1.5 sm:p-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 shrink-0">
+              <Mic className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900">{avgAccuracy}%</span>
-            <span className="text-xs font-semibold text-emerald-600">Excelente</span>
+          <div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl sm:text-3xl font-extrabold text-slate-900">{avgAccuracy}%</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-emerald-600">Fluidez</span>
+            </div>
+            <p className="text-[10px] sm:text-xs text-slate-400 mt-1 line-clamp-1">Voz en vivo</p>
           </div>
-          <p className="text-xs text-slate-400 mt-2">Medido con reconocimiento de voz en vivo</p>
         </div>
       </div>
 

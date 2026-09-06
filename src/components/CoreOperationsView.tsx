@@ -107,6 +107,9 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
   const [readingSecondsLeft, setReadingSecondsLeft] = useState<number>(READING_TIME_REQUIRED_SECONDS);
   const [readingTimerActive, setReadingTimerActive] = useState<boolean>(true);
 
+  // Mobile segmented view: 'story' (Lectura y Voz) vs 'quiz' (Preguntas y Temporizador)
+  const [mobileReaderTab, setMobileReaderTab] = useState<'story' | 'quiz'>('story');
+
   // Reset timer on active story change
   useEffect(() => {
     setReadingSecondsLeft(READING_TIME_REQUIRED_SECONDS);
@@ -114,6 +117,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
     setQuizAnswers({});
     setQuizSubmitted(false);
     setQuizScore(0);
+    setMobileReaderTab('story');
   }, [activeStory.id]);
 
   // Countdown timer effect
@@ -594,7 +598,10 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
           return (
             <button
               key={story.id}
-              onClick={() => handleSelectStory(story)}
+              onClick={() => {
+                handleSelectStory(story);
+                setMobileReaderTab('story');
+              }}
               className={`flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 isCurrent
                   ? 'bg-indigo-50 border-indigo-300 text-indigo-900 shadow-xs ring-1 ring-indigo-400'
@@ -620,10 +627,48 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
         })}
       </div>
 
+      {/* Mobile Reader Switcher (Cuento vs Preguntas) */}
+      <div className="lg:hidden flex p-1 bg-slate-200/80 rounded-2xl gap-1 w-full shadow-inner">
+        <button
+          id="btn-mobile-tab-story"
+          type="button"
+          onClick={() => setMobileReaderTab('story')}
+          className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            mobileReaderTab === 'story'
+              ? 'bg-white text-indigo-700 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          <BookOpen className="w-4 h-4 text-indigo-600" />
+          <span>1. Cuento y Voz</span>
+        </button>
+
+        <button
+          id="btn-mobile-tab-quiz"
+          type="button"
+          onClick={() => setMobileReaderTab('quiz')}
+          className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            mobileReaderTab === 'quiz'
+              ? 'bg-white text-indigo-700 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          <HelpCircle className="w-4 h-4 text-amber-600" />
+          <span>2. Preguntas (5)</span>
+          {readingSecondsLeft > 0 ? (
+            <span className="ml-1 px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black">
+              {Math.floor(readingSecondsLeft / 60)}:{(readingSecondsLeft % 60).toString().padStart(2, '0')}
+            </span>
+          ) : (
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          )}
+        </button>
+      </div>
+
       {/* MAIN READER WORKSPACE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full max-w-full">
         {/* Left Column: Interactive Story & Speech Evaluation (7 cols) */}
-        <div className="lg:col-span-7 space-y-5">
+        <div className={`${mobileReaderTab === 'story' ? 'block' : 'hidden'} lg:block lg:col-span-7 space-y-5`}>
           {/* Story Reading Box */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             {/* Box Header & Audio Controls */}
@@ -714,8 +759,8 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
             )}
 
             {/* Story Text Display with live highlighted words */}
-            <div className="p-6 sm:p-8">
-              <div className="bg-amber-50/40 p-6 sm:p-7 rounded-2xl border border-amber-200/60 leading-relaxed text-slate-800 font-serif text-lg sm:text-xl shadow-xs">
+            <div className="p-3.5 sm:p-6 sm:p-8">
+              <div className="bg-amber-50/40 p-3.5 sm:p-6 sm:p-7 rounded-2xl border border-amber-200/60 leading-relaxed text-slate-800 font-serif text-base sm:text-xl shadow-xs">
                 {activeStory.text.split(/(\s+)/).map((segment, index) => {
                   const cleaned = cleanWord(segment);
                   const isRecognized = cleaned && recognizedWords.has(cleaned);
@@ -805,10 +850,41 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
               </button>
             </div>
           </div>
+
+          {/* Mobile shortcut to Quiz */}
+          <div className="lg:hidden pt-1">
+            <button
+              id="btn-mobile-goto-quiz"
+              type="button"
+              onClick={() => {
+                setMobileReaderTab('quiz');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all"
+            >
+              <span>Ir a las 5 Preguntas de Comprensión</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
-        {/* Right Column: 3 Preguntas de Falso o Verdadero & Canje (5 cols) */}
-        <div className="lg:col-span-5 space-y-5">
+        {/* Right Column: 5 Preguntas de Falso o Verdadero & Canje (5 cols) */}
+        <div className={`${mobileReaderTab === 'quiz' ? 'block' : 'hidden'} lg:block lg:col-span-5 space-y-5`}>
+          {/* Mobile shortcut back to Story */}
+          <div className="lg:hidden">
+            <button
+              id="btn-mobile-backto-story"
+              type="button"
+              onClick={() => {
+                setMobileReaderTab('story');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all border border-slate-200"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Volver a leer el texto del cuento</span>
+            </button>
+          </div>
           {/* True / False Quiz Box with Dynamic Question Variation */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 sm:p-6 space-y-5">
             <div className="border-b border-slate-100 pb-3 space-y-2">
@@ -878,7 +954,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                           <span>Tiempo de Lectura Guiada</span>
                           <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[10px] font-black">2 MIN</span>
                         </h4>
-                        <p className="text-[11px] text-amber-800 font-medium">Lee con atención el cuento en la izquierda</p>
+                        <p className="text-[11px] text-amber-800 font-medium">Lee con atención el cuento antes de responder</p>
                       </div>
                     </div>
                     <div className="text-right">

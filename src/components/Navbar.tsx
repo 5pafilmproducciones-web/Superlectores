@@ -335,10 +335,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Navigation Tabs (4 columns, strictly responsive, zero overflow) */}
+      {/* Mobile Bottom Navigation Bar (Fixed bottom, app-like UX with comfortable touch targets) */}
       <nav 
-        id="mobile-navigation-tabs"
-        className="lg:hidden grid grid-cols-4 gap-1 p-1.5 border-t border-slate-200/80 bg-slate-50/95 w-full max-w-full"
+        id="mobile-navigation-bottom"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-2 py-1.5 grid grid-cols-4 gap-1 safe-area-bottom w-full max-w-full"
       >
         {tabs.map((tab) => {
           const isActive = currentTab === tab.id;
@@ -348,10 +348,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               id={`nav-tab-mobile-${tab.id}`}
               type="button"
               onClick={() => onSelectTab(tab.id)}
-              className={`flex flex-col items-center justify-center py-1 px-1 rounded-xl transition-all cursor-pointer select-none text-center ${
+              className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl transition-all cursor-pointer select-none text-center min-h-[44px] ${
                 isActive 
                   ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                  : 'text-slate-600 hover:text-slate-900 active:bg-slate-100'
               }`}
             >
               <div className="shrink-0 mb-0.5">{tab.icon}</div>

@@ -115,8 +115,96 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
         </div>
       </div>
 
-      {/* Table Container */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      {/* Mobile Card List (Visible on mobile phones, zero horizontal scrolling) */}
+      <div className="md:hidden space-y-3">
+        {filteredRecords.length === 0 ? (
+          <div className="bg-white rounded-2xl p-8 text-center text-slate-400 border border-slate-200">
+            <p className="font-semibold text-sm">No se encontraron registros</p>
+            <p className="text-xs mt-1">Intenta con otro término de búsqueda o cambia los filtros.</p>
+          </div>
+        ) : (
+          filteredRecords.map((record) => {
+            const isCompletado = record.status === 'completado';
+            const isActivo = record.status === 'activo';
+            return (
+              <div 
+                key={record.id}
+                id={`record-card-mobile-${record.id}`}
+                className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-bold text-slate-900 text-sm leading-tight">{record.title}</h4>
+                    {record.authorOrTarget && (
+                      <p className="text-[11px] text-slate-400 mt-0.5">{record.authorOrTarget}</p>
+                    )}
+                  </div>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shrink-0">
+                    {record.category}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-slate-700">Nivel {record.level || 1}</span>
+                    <span className="font-bold text-sky-600 flex items-center gap-0.5">
+                      <Gem className="w-3 h-3 fill-sky-200" />
+                      {record.gemsReward || 10}
+                    </span>
+                  </div>
+
+                  <div className="relative inline-block">
+                    <select
+                      id={`select-status-mobile-${record.id}`}
+                      value={record.status}
+                      onChange={(e) =>
+                        onUpdateStatus(record.id, e.target.value as 'activo' | 'pendiente' | 'completado')
+                      }
+                      className={`text-xs font-bold rounded-lg px-2 py-1 appearance-none pr-5 cursor-pointer border transition-colors ${
+                        isCompletado
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : isActivo
+                          ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                          : 'bg-amber-50 text-amber-700 border-amber-200'
+                      }`}
+                    >
+                      <option value="activo">Activo</option>
+                      <option value="pendiente">Pendiente</option>
+                      <option value="completado">Completado</option>
+                    </select>
+                    <ChevronDown className="w-3 h-3 absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none opacity-50" />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-400">
+                  <span>{record.createdAt}</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onEditRecord(record)}
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold flex items-center gap-1 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                    >
+                      <Edit3 className="w-3 h-3" />
+                      <span>Editar</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRecordToDelete(record)}
+                      className="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 font-semibold flex items-center gap-1 hover:bg-rose-100 transition-colors"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Borrar</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Table Container (Tablet and Desktop) */}
+      <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table id="table-core-records" className="w-full text-left text-xs">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
