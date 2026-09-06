@@ -19,19 +19,22 @@ import {
   ChevronRight,
   Smile,
   GraduationCap,
-  FileText
+  FileText,
+  Share2
 } from 'lucide-react';
 import { AuthMode } from '../types';
 
 interface LandingPageProps {
   onNavigateToAuth: (mode: AuthMode) => void;
   onEnterApp: () => void;
+  onOpenShareModal?: () => void;
   isAuthenticated?: boolean;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onNavigateToAuth,
   onEnterApp,
+  onOpenShareModal,
   isAuthenticated = false,
 }) => {
 
@@ -79,7 +82,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </nav>
 
           {/* Botones de acción del Header */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {onOpenShareModal && (
+              <button
+                id="landing-btn-share-modal"
+                type="button"
+                onClick={onOpenShareModal}
+                className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-amber-500/30 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                title="Obtener enlace público para clientes"
+              >
+                <Share2 className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Compartir</span>
+              </button>
+            )}
+
             {isAuthenticated ? (
               <button
                 id="landing-btn-enter-app"

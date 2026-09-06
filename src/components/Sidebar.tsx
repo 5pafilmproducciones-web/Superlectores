@@ -125,13 +125,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   {currentSupabaseProfile?.child_name || 'Mi Cuenta'}
                 </span>
                 <span className="text-[10px] text-emerald-600 font-medium block">
-                  Supabase Activo
+                  Cuenta Activa
                 </span>
               </div>
             </button>
           ) : (
             <button
-              id="btn-sidebar-supabase-login"
+              id="btn-sidebar-account-login"
               type="button"
               onClick={() => onSelectTab('auth')}
               className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left cursor-pointer ${

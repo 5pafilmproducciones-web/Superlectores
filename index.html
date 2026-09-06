@@ -16,7 +16,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
-    <div id="root"></div>
+    <div id="root">
+      <div id="initial-preloader" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#030712;color:#ffffff;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;padding:24px;text-align:center;">
+        <div style="position:relative;margin-bottom:20px;">
+          <div style="position:absolute;inset:-12px;border-radius:9999px;background:rgba(245,158,11,0.25);filter:blur(16px);"></div>
+          <img src="/logo_superlectores.png" alt="Super Lectores" style="position:relative;width:96px;height:96px;border-radius:9999px;border:3px solid #f59e0b;box-shadow:0 12px 30px -5px rgba(0,0,0,0.6);object-fit:cover;" />
+        </div>
+        <h1 style="font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;margin:0 0 6px 0;">Super Lectores</h1>
+        <p style="font-size:13px;color:#94a3b8;margin:0 0 24px 0;max-width:280px;line-height:1.5;">Cargando biblioteca mágica de cuentos...</p>
+        <div style="width:160px;height:6px;background:rgba(255,255,255,0.1);border-radius:9999px;overflow:hidden;position:relative;">
+          <div style="width:60%;height:100%;background:linear-gradient(90deg,#f59e0b,#6366f1);border-radius:9999px;animation:sl-load-pulse 1.2s ease-in-out infinite;"></div>
+        </div>
+        <style>
+          @keyframes sl-load-pulse {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+          }
+        </style>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

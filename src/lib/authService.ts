@@ -46,10 +46,12 @@ export async function signUpWithSupabase(params: SignUpParams): Promise<AuthResp
   }
 
   try {
+    const redirectUrl = typeof window !== 'undefined' ? window.location.origin : undefined;
     const { data, error } = await client.auth.signUp({
       email: params.email.trim(),
       password: params.password,
       options: {
+        emailRedirectTo: redirectUrl,
         data: {
           full_name: params.fullName.trim(),
           child_name: params.childName.trim() || 'Lector Estrella',

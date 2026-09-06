@@ -356,7 +356,7 @@ export const SettingsAndGamesView: React.FC<SettingsAndGamesViewProps> = ({
             </div>
             <div>
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                Cuenta y Autenticación Supabase
+                Cuenta y Perfil de Usuario
                 {currentUser && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 flex items-center gap-1">
                     <ShieldCheck className="w-3 h-3" />
@@ -365,7 +365,7 @@ export const SettingsAndGamesView: React.FC<SettingsAndGamesViewProps> = ({
                 )}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Conectado con la tabla <code className="font-mono text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded">public.profiles</code> y Supabase Auth RLS.
+                Sincronización en la nube para guardar tu puntuación real y gemas mágicas.
               </p>
             </div>
           </div>
@@ -429,7 +429,7 @@ export const SettingsAndGamesView: React.FC<SettingsAndGamesViewProps> = ({
             <div>
               <p className="font-bold text-slate-800">¿Deseas respaldar tus cuentos y gemas en la nube?</p>
               <p className="text-slate-500 text-[11px] mt-0.5">
-                Crea una cuenta gratuita con Supabase para sincronizar el avance de tu hijo entre diferentes dispositivos.
+                Crea una cuenta gratuita en Super Lectores para sincronizar el avance de tu hijo entre diferentes dispositivos.
               </p>
             </div>
             <button

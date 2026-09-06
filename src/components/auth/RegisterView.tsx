@@ -72,11 +72,13 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
     setIsLoading(true);
 
     try {
-      // 2. Llamada nativa de Supabase Auth
+      // 2. Llamada de autenticación con redirección a la app
+      const redirectUrl = typeof window !== 'undefined' ? window.location.origin : undefined;
       const { data, error } = await client.auth.signUp({
         email: email.trim(),
         password: password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
             full_name: fullName.trim(),
             child_name: childName.trim(),
@@ -141,9 +143,9 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
         </p>
         <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500 text-left space-y-1.5">
           <p className="font-bold text-slate-700">Pasos a seguir:</p>
-          <p>1. Abre tu bandeja de entrada (revisa también spam).</p>
-          <p>2. Haz clic en el botón de confirmación de Supabase.</p>
-          <p>3. Regresa aquí para iniciar sesión e ingresar a tus cuentos.</p>
+          <p>1. Abre tu bandeja de entrada (revisa también correo no deseado/spam).</p>
+          <p>2. Haz clic en el enlace de confirmación en el correo recibido de <strong>Super Lectores</strong>.</p>
+          <p>3. Serás redirigido automáticamente a la aplicación para ingresar a tus cuentos.</p>
         </div>
         {onNavigateToLogin && (
           <button
@@ -181,7 +183,7 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
           className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-start gap-2"
         >
           <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-          <p>Configura las credenciales de Supabase para habilitar registros reales.</p>
+          <p>Servicio de cuentas en línea no detectado. Revisa la configuración de variables de entorno.</p>
         </div>
       )}
 

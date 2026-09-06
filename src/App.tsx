@@ -34,6 +34,7 @@ import { AuthScreen } from './components/auth';
 import { LandingPage } from './components/LandingPage';
 import { AuthMode, SupabaseProfile, SupabaseUser } from './types';
 import { getCurrentSession, fetchUserProfile } from './lib/authService';
+import { getSupabase } from './lib/supabaseClient';
 import { RaceGame } from './components/games/RaceGame';
 import { PuzzleGame } from './components/games/PuzzleGame';
 import { PaintGame } from './components/games/PaintGame';
@@ -123,8 +124,9 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<AuthMode>('login');
 
-  // Check existing Supabase session on startup
+  // Check existing session and listen for auth events (such as email confirmation redirects)
   useEffect(() => {
+    // 1. Initial session check
     getCurrentSession().then(async ({ user }) => {
       if (user) {
         setCurrentUser(user as SupabaseUser);
@@ -133,7 +135,6 @@ export default function App() {
         if (prof?.child_name) {
           setProfile((prev) => ({ ...prev, name: prof.child_name! }));
         }
-        // Load user-specific scores and gems
         try {
           const userKey = `superlectores_profile_${user.id}`;
           const savedData = localStorage.getItem(userKey);
@@ -146,7 +147,57 @@ export default function App() {
         }
       }
     });
-  }, [setProfile]);
+
+    // 2. Listen for auth changes and email confirmation tokens in the URL
+    const client = getSupabase();
+    if (client) {
+      const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
+        if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && session?.user) {
+          const authedUser = session.user as SupabaseUser;
+          setCurrentUser(authedUser);
+          const prof = await fetchUserProfile(authedUser.id);
+          setCurrentSupabaseProfile(prof);
+          if (prof?.child_name) {
+            setProfile((prev) => ({ ...prev, name: prof.child_name! }));
+          }
+          try {
+            const userKey = `superlectores_profile_${authedUser.id}`;
+            const savedData = localStorage.getItem(userKey);
+            if (savedData) {
+              const parsed = JSON.parse(savedData);
+              setProfile((prev) => ({ ...prev, ...parsed }));
+            }
+          } catch {
+            // ignore
+          }
+
+          // Check if this was an email verification redirect (hash with access_token or query code)
+          if (typeof window !== 'undefined') {
+            const hasTokens = window.location.hash.includes('access_token') || window.location.search.includes('code=');
+            if (hasTokens) {
+              window.history.replaceState(null, '', window.location.pathname);
+              showToast(
+                'success',
+                '¡Correo Confirmado con Éxito!',
+                `¡Bienvenido a Super Lectores, ${prof?.child_name || authedUser.email?.split('@')[0]}! Tu cuenta está activa y lista para leer.`
+              );
+            }
+          }
+
+          // Automatically route to the dashboard so the user accesses directly
+          setCurrentTab('dashboard');
+        } else if (event === 'SIGNED_OUT') {
+          setCurrentUser(null);
+          setCurrentSupabaseProfile(null);
+          setCurrentTab('landing');
+        }
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [setProfile, setCurrentTab]);
 
   // Sync profile data to user's personal storage when logged in
   useEffect(() => {
@@ -341,7 +392,12 @@ export default function App() {
             setCurrentTab('auth');
           }}
           onEnterApp={handleEnterApp}
+          onOpenShareModal={() => setIsShareModalOpen(true)}
           isAuthenticated={Boolean(currentUser)}
+        />
+        <ShareAppModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
         />
         <ToastContainer toasts={toasts} onDismiss={dismissToast} />
       </div>
