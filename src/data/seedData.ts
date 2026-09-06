@@ -13,69 +13,18 @@ import cloudCastleImg from '../assets/images/story_cloud_castle_1788558093794.jp
 import marsImg from '../assets/images/story_mars_greenhouse_1788558110123.jpg';
 import crystalCityImg from '../assets/images/story_crystal_city_1788558125804.jpg';
 
-export const INITIAL_RECORDS: CoreRecord[] = [
-  { 
-    id: '1', 
-    title: 'Registro Inicial de Prueba', 
-    category: 'General', 
-    status: 'activo', 
-    createdAt: '2026-08-17',
-    level: 1,
-    gemsReward: 10,
-    authorOrTarget: 'Evaluación Inicial'
-  },
-  { 
-    id: '2', 
-    title: 'Operación Secundaria', 
-    category: 'Core', 
-    status: 'completado', 
-    createdAt: '2026-08-16',
-    level: 2,
-    gemsReward: 15,
-    authorOrTarget: 'Módulo de Comprensión'
-  },
-  { 
-    id: '3', 
-    title: 'Lectura de Draco el Dragón', 
-    category: 'Cuentos Nivel 1', 
-    status: 'activo', 
-    createdAt: '2026-08-20',
-    level: 1,
-    gemsReward: 12,
-    authorOrTarget: 'Lucas (Estudiante)'
-  },
-  { 
-    id: '4', 
-    title: 'Práctica Auditiva: El Robot Pintor', 
-    category: 'Cuentos Nivel 2', 
-    status: 'pendiente', 
-    createdAt: '2026-08-22',
-    level: 2,
-    gemsReward: 18,
-    authorOrTarget: 'Lucas (Estudiante)'
-  },
-  { 
-    id: '5', 
-    title: 'Desafío Comprensión: El Templo de Coral', 
-    category: 'Cuentos Nivel 3', 
-    status: 'pendiente', 
-    createdAt: '2026-08-25',
-    level: 3,
-    gemsReward: 25,
-    authorOrTarget: 'Nivel Avanzado'
-  }
-];
+export const INITIAL_RECORDS: CoreRecord[] = [];
 
 export const INITIAL_CHILD_PROFILE: ChildProfile = {
-  name: 'Lucas Martínez',
-  age: 8,
-  avatar: 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=150&auto=format&fit=crop&q=80',
+  name: 'Nuevo Lector',
+  age: 7,
+  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
   level: 1,
   gems: 0,
   score: 0,
   storiesCompletedCount: 0,
   audioAccuracyAverage: 0,
-  streakDays: 1,
+  streakDays: 0,
   activeGamePass: null
 };
 

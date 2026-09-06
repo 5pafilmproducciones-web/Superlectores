@@ -176,7 +176,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({
               type="text"
               value={authorOrTarget}
               onChange={(e) => setAuthorOrTarget(e.target.value)}
-              placeholder="Ej. Lucas (Estudiante) o Aula 3A"
+              placeholder="Ej. Estudiante o Aula 1A"
               className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500"
             />
           </div>

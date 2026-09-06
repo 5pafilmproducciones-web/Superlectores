@@ -67,23 +67,29 @@ export default function App() {
   // Share modal state
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-  // Ensure child starts with 0 gems when opening for the first time
+  // Ensure child starts with 0 gems and completely clean profile and records
   useEffect(() => {
     try {
-      const initializedKey = 'lecturakids_zero_gems_v4';
-      if (typeof window !== 'undefined' && window.localStorage && !window.localStorage.getItem(initializedKey)) {
+      const cleanStartKey = 'superlectores_clean_v6';
+      if (typeof window !== 'undefined' && window.localStorage && !window.localStorage.getItem(cleanStartKey)) {
+        setRecords([]);
+        setEvaluations([]);
         setProfile((prev) => ({
           ...prev,
+          name: prev.name === 'Lucas Martínez' ? 'Nuevo Lector' : prev.name,
           gems: 0,
           score: 0,
           storiesCompletedCount: 0,
+          streakDays: 0,
         }));
-        window.localStorage.setItem(initializedKey, 'true');
+        window.localStorage.setItem('superlectores_records', JSON.stringify([]));
+        window.localStorage.setItem('superlectores_evaluations', JSON.stringify([]));
+        window.localStorage.setItem(cleanStartKey, 'true');
       }
     } catch (err) {
       console.warn('Storage initial check bypassed:', err);
     }
-  }, [setProfile]);
+  }, [setProfile, setRecords, setEvaluations]);
 
   // Ensure all 13 stories, balanced rewards, and cover images are synced
   useEffect(() => {

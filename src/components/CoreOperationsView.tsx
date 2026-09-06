@@ -22,7 +22,11 @@ import {
   Gamepad2,
   AlertCircle,
   RefreshCw,
-  HeartHandshake
+  HeartHandshake,
+  Clock,
+  Timer,
+  Lock,
+  Unlock
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -98,32 +102,70 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
     return activeStory.text.split(/\s+/).map((w) => cleanWord(w)).filter(Boolean);
   }, [activeStory]);
 
-  // Derive dynamic 3-question set for the current story session
+  // Mandatory 2-minute reading timer (120 seconds) to ensure child reads before answering
+  const READING_TIME_REQUIRED_SECONDS = 120;
+  const [readingSecondsLeft, setReadingSecondsLeft] = useState<number>(READING_TIME_REQUIRED_SECONDS);
+  const [readingTimerActive, setReadingTimerActive] = useState<boolean>(true);
+
+  // Reset timer on active story change
+  useEffect(() => {
+    setReadingSecondsLeft(READING_TIME_REQUIRED_SECONDS);
+    setReadingTimerActive(true);
+    setQuizAnswers({});
+    setQuizSubmitted(false);
+    setQuizScore(0);
+  }, [activeStory.id]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (!readingTimerActive || readingSecondsLeft <= 0) return;
+    const timer = setInterval(() => {
+      setReadingSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setReadingTimerActive(false);
+          showToast('success', '¡Tiempo de lectura completado! 🎉', 'Las 5 preguntas de comprensión ya están desbloqueadas.');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [readingTimerActive, readingSecondsLeft, showToast]);
+
+  // Optional manual unlock for teachers/parents
+  const handleTeacherUnlock = () => {
+    setReadingSecondsLeft(0);
+    setReadingTimerActive(false);
+    showToast('info', 'Preguntas desbloqueadas por el tutor', 'Ahora puedes responder las 5 preguntas.');
+  };
+
+  // Derive dynamic 5-question set for the current story session
   const activeQuestions = useMemo(() => {
     const pool = activeStory.questions || [];
-    if (pool.length <= 3) return pool;
+    if (pool.length <= 5) return pool;
 
     const mastered = masteredQuestionIdsByStory[activeStory.id] || [];
     const unmastered = pool.filter((q) => !mastered.includes(q.id));
 
-    if (unmastered.length >= 3) {
+    if (unmastered.length >= 5) {
       // Prioritize questions the child hasn't answered correctly yet
       const offset = questionRotationOffset % unmastered.length;
       const rotated = [...unmastered.slice(offset), ...unmastered.slice(0, offset)];
-      return rotated.slice(0, 3);
+      return rotated.slice(0, 5);
     } else if (unmastered.length > 0) {
       // Use remaining unmastered questions and fill the rest from the pool
-      const needed = 3 - unmastered.length;
+      const needed = 5 - unmastered.length;
       const masteredPool = pool.filter((q) => mastered.includes(q.id));
       const offset = questionRotationOffset % Math.max(1, masteredPool.length);
       const rotatedMastered = [...masteredPool.slice(offset), ...masteredPool.slice(0, offset)];
       return [...unmastered, ...rotatedMastered.slice(0, needed)];
     } else {
       // All questions in the pool have been answered correctly!
-      // Rotate through the full pool in batches so future sessions on this story continue to vary
-      const offset = (questionRotationOffset * 3) % pool.length;
+      // Rotate through the full pool in batches of 5 so future sessions on this story continue to vary
+      const offset = (questionRotationOffset * 5) % pool.length;
       const rotated = [...pool.slice(offset), ...pool.slice(0, offset)];
-      return rotated.slice(0, 3);
+      return rotated.slice(0, 5);
     }
   }, [activeStory, masteredQuestionIdsByStory, questionRotationOffset]);
 
@@ -780,7 +822,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold">
-                    3 de {activeStory.questions?.length || 3} Preguntas
+                    5 de {activeStory.questions?.length || 5} Preguntas
                   </span>
                 </div>
               </div>
@@ -790,7 +832,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                 <div className="flex items-center gap-1.5 text-slate-600">
                   <span className="font-medium text-[11px]">Banco de comprensión:</span>
                   <span className="px-2 py-0.5 rounded-full bg-white font-extrabold text-indigo-700 text-[11px] border border-slate-200">
-                    {(masteredQuestionIdsByStory[activeStory.id] || []).length} / {activeStory.questions?.length || 3} dominadas ⭐
+                    {(masteredQuestionIdsByStory[activeStory.id] || []).length} / {activeStory.questions?.length || 5} dominadas ⭐
                   </span>
                 </div>
 
@@ -806,7 +848,7 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                     <span>Cambiar preguntas</span>
                   </button>
 
-                  {(masteredQuestionIdsByStory[activeStory.id] || []).length >= (activeStory.questions?.length || 3) && (
+                  {(masteredQuestionIdsByStory[activeStory.id] || []).length >= (activeStory.questions?.length || 5) && (
                     <button
                       id="btn-reset-questions-mastery"
                       type="button"
@@ -819,10 +861,78 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
                   )}
                 </div>
               </div>
+
+              {/* 2-Minute Guided Reading Timer Card */}
+              {readingSecondsLeft > 0 ? (
+                <div 
+                  id="reading-timer-locked-card"
+                  className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50/70 border-2 border-amber-300 text-amber-950 space-y-2.5 shadow-2xs animate-in fade-in"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold shadow-2xs">
+                        <Timer className="w-4 h-4 animate-spin-slow" />
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-xs text-amber-950 flex items-center gap-1.5">
+                          <span>Tiempo de Lectura Guiada</span>
+                          <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[10px] font-black">2 MIN</span>
+                        </h4>
+                        <p className="text-[11px] text-amber-800 font-medium">Lee con atención el cuento en la izquierda</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-mono text-base sm:text-lg font-black text-amber-900 bg-white/90 border border-amber-300 px-2.5 py-0.5 rounded-lg shadow-2xs inline-block">
+                        {Math.floor(readingSecondsLeft / 60).toString().padStart(2, '0')}:{(readingSecondsLeft % 60).toString().padStart(2, '0')}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Visual Progress Bar */}
+                  <div className="w-full bg-amber-200/80 rounded-full h-2 overflow-hidden">
+                    <div 
+                      className="bg-amber-600 h-full transition-all duration-1000 ease-linear rounded-full"
+                      style={{ width: `${Math.min(100, Math.round(((READING_TIME_REQUIRED_SECONDS - readingSecondsLeft) / READING_TIME_REQUIRED_SECONDS) * 100))}%` }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-amber-800">
+                    <span className="flex items-center gap-1 font-medium">
+                      <Lock className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                      Preguntas bloqueadas temporalmente
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleTeacherUnlock}
+                      className="text-[10px] text-amber-900 hover:text-indigo-700 underline font-semibold cursor-pointer"
+                      title="Desbloquear como Tutor o Docente"
+                    >
+                      Desbloquear como Tutor
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div 
+                  id="reading-timer-unlocked-card"
+                  className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 flex items-center justify-between text-xs font-bold animate-in fade-in"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-md bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                      <Unlock className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="text-emerald-900 font-extrabold text-[11px] sm:text-xs">
+                      ¡Tiempo de lectura cumplido! Responde las 5 preguntas
+                    </span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 text-[10px] font-black">
+                    Desbloqueado ✓
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Questions List (Dynamic 3 questions) */}
-            <div className="space-y-4">
+            {/* Questions List (5 questions) */}
+            <div className={`space-y-4 transition-all duration-300 ${readingSecondsLeft > 0 ? 'opacity-50 pointer-events-none select-none' : ''}`}>
               {activeQuestions.map((q, index) => {
                 const answer = quizAnswers[q.id];
                 const isAnswered = answer !== undefined && answer !== null;
@@ -905,10 +1015,17 @@ export const CoreOperationsView: React.FC<CoreOperationsViewProps> = ({
               <button
                 id="btn-evaluate-quiz"
                 onClick={evaluateQuiz}
-                disabled={Object.keys(quizAnswers).length < activeQuestions.length}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer"
+                disabled={readingSecondsLeft > 0 || Object.keys(quizAnswers).length < activeQuestions.length}
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                Comprobar Respuestas
+                {readingSecondsLeft > 0 ? (
+                  <>
+                    <Lock className="w-4 h-4 text-amber-300" />
+                    <span>Lee el cuento primero ({Math.floor(readingSecondsLeft / 60).toString().padStart(2, '0')}:{(readingSecondsLeft % 60).toString().padStart(2, '0')})</span>
+                  </>
+                ) : (
+                  <span>Comprobar Respuestas</span>
+                )}
               </button>
             ) : (
               <div className="space-y-3">

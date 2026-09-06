@@ -211,10 +211,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div className="text-left hidden lg:block">
               <p className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition-colors leading-tight">
-                {profile.name}
+                {currentSupabaseProfile?.child_name || (profile.name === 'Lucas Martínez' ? 'Nuevo Lector' : profile.name)}
               </p>
               <p className="text-[10px] text-slate-500 leading-tight">
-                {profile.age} años
+                {currentUser ? `${profile.age} años` : 'Sin cuenta activa'}
               </p>
             </div>
           </div>
@@ -248,7 +248,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <div className="px-3 py-1.5 border-b border-slate-100 mb-1">
                   <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Opciones</p>
-                  <p className="text-xs font-bold text-slate-800 truncate">{profile.name} (Nivel {profile.level})</p>
+                  <p className="text-xs font-bold text-slate-800 truncate">
+                    {currentSupabaseProfile?.child_name || (profile.name === 'Lucas Martínez' ? 'Nuevo Lector' : profile.name)} (Nivel {profile.level})
+                  </p>
                 </div>
 
                 {/* Compartir App */}
