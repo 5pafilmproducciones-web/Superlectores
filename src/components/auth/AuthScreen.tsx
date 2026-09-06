@@ -42,8 +42,25 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
     setIsSigningOut(true);
     try {
       await signOutFromSupabase();
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < window.localStorage.length; i++) {
+          const key = window.localStorage.key(i);
+          if (key && (
+            key.startsWith('sb-') || 
+            key.startsWith('superlectores_profile') || 
+            key === 'superlectores_records' || 
+            key === 'superlectores_evaluations' ||
+            key === 'superlectores_current_tab' ||
+            key.includes('supabase')
+          )) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach((k) => window.localStorage.removeItem(k));
+      }
       onAuthChange(null, null);
-      showToast('info', 'Sesión cerrada', 'Has salido de tu cuenta correctamente.');
+      showToast('info', 'Sesión cerrada', 'Has salido de tu cuenta y se han limpiado los datos de sesión.');
       setActiveMode('login');
     } catch (err: any) {
       showToast('error', 'Error al salir', err?.message || 'No se pudo cerrar la sesión.');

@@ -33,7 +33,7 @@ import { AuthModal } from './components/AuthModal';
 import { AuthScreen } from './components/auth';
 import { LandingPage } from './components/LandingPage';
 import { AuthMode, SupabaseProfile, SupabaseUser } from './types';
-import { getCurrentSession, fetchUserProfile } from './lib/authService';
+import { getCurrentSession, fetchUserProfile, signOutFromSupabase } from './lib/authService';
 import { getSupabase } from './lib/supabaseClient';
 import { RaceGame } from './components/games/RaceGame';
 import { PuzzleGame } from './components/games/PuzzleGame';
@@ -67,29 +67,44 @@ export default function App() {
   // Share modal state
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-  // Ensure child starts with 0 gems and completely clean profile and records
+  // Ensure child starts with 0 gems, wipe existing user sessions and data to start completely fresh
   useEffect(() => {
     try {
-      const cleanStartKey = 'superlectores_clean_v6';
-      if (typeof window !== 'undefined' && window.localStorage && !window.localStorage.getItem(cleanStartKey)) {
+      const cleanWipeKey = 'superlectores_wipe_all_users_v10';
+      if (typeof window !== 'undefined' && window.localStorage && !window.localStorage.getItem(cleanWipeKey)) {
+        window.localStorage.setItem(cleanWipeKey, 'true');
+
+        // Immediately sign out from Supabase if any active session was stored
+        signOutFromSupabase().catch(() => {});
+
+        // Wipe all user profiles, tokens, progress and evaluations from local storage
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < window.localStorage.length; i++) {
+          const key = window.localStorage.key(i);
+          if (key && (
+            key.startsWith('sb-') || 
+            key.startsWith('superlectores_profile') || 
+            key === 'superlectores_records' || 
+            key === 'superlectores_evaluations' ||
+            key === 'superlectores_current_tab' ||
+            key.includes('supabase')
+          )) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach((k) => window.localStorage.removeItem(k));
+
+        setCurrentUser(null);
+        setCurrentSupabaseProfile(null);
         setRecords([]);
         setEvaluations([]);
-        setProfile((prev) => ({
-          ...prev,
-          name: prev.name === 'Lucas Martínez' ? 'Nuevo Lector' : prev.name,
-          gems: 0,
-          score: 0,
-          storiesCompletedCount: 0,
-          streakDays: 0,
-        }));
-        window.localStorage.setItem('superlectores_records', JSON.stringify([]));
-        window.localStorage.setItem('superlectores_evaluations', JSON.stringify([]));
-        window.localStorage.setItem(cleanStartKey, 'true');
+        setProfile(INITIAL_CHILD_PROFILE);
+        setCurrentTab('landing');
       }
     } catch (err) {
-      console.warn('Storage initial check bypassed:', err);
+      console.warn('Storage wipe check bypassed:', err);
     }
-  }, [setProfile, setRecords, setEvaluations]);
+  }, [setProfile, setRecords, setEvaluations, setCurrentTab]);
 
   // Ensure all 13 stories, balanced rewards, and cover images are synced
   useEffect(() => {
@@ -326,14 +341,34 @@ export default function App() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Reset seed data
-  const handleResetSeedData = () => {
-    setRecords(INITIAL_RECORDS);
+  // Reset seed data and wipe all users/progress
+  const handleResetSeedData = async () => {
+    await signOutFromSupabase().catch(() => {});
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < window.localStorage.length; i++) {
+        const key = window.localStorage.key(i);
+        if (key && (
+          key.startsWith('sb-') || 
+          key.startsWith('superlectores_profile') || 
+          key === 'superlectores_records' || 
+          key === 'superlectores_evaluations' ||
+          key === 'superlectores_current_tab' ||
+          key.includes('supabase')
+        )) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => window.localStorage.removeItem(k));
+    }
+    setCurrentUser(null);
+    setCurrentSupabaseProfile(null);
+    setRecords([]);
+    setEvaluations([]);
     setProfile(INITIAL_CHILD_PROFILE);
     setStories(INITIAL_STORIES);
-    setEvaluations(INITIAL_EVALUATIONS);
-    setCurrentTab('dashboard');
-    showToast('success', 'Datos Semilla Restablecidos', 'Se han restaurado los cuentos, registros y perfil iniciales.');
+    setCurrentTab('landing');
+    showToast('success', 'Usuarios y Datos Borrados', 'Se han cerrado todas las sesiones y restablecido los registros a cero.');
   };
 
   // Records CRUD
